@@ -1,5 +1,3 @@
-GET http://localhost:8080/http/get
-
 POST http://localhost:8080/http/post
 
 GET http://localhost:8080/http/put

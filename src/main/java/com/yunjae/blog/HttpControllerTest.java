@@ -13,6 +13,7 @@ public class HttpControllerTest{
         return "get 요청";
     }
 
+    // 브라우저에서는 get 요청만 할 수 있다. : 405에러
     // http://localhost:8080/http/post (insert)
     @PostMapping("/http/post")
     public String postTest() {
