@@ -1,7 +1,0 @@
-POST http://localhost:8080/http/post
-
-GET http://localhost:8080/http/put
-
-GEThttp://localhost:8080/http/delete
-
-###
