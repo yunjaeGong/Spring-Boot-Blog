@@ -3,7 +3,7 @@ package com.yunjae.blog.test;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller // Data가 아닌 파일 반환!
+@Controller // Data가 아닌 (해당 경로 이하)파일 반환!
 public class TempControllerTest {
     public static String TAG = "tempHome";
 
@@ -18,4 +18,17 @@ public class TempControllerTest {
         // 풀 경로: src/main/resource/static/home.html
         //TODO: application.yml에서 mvc 주석 해제
     }
+
+    @GetMapping("/temp/img")
+    public String tempImg() {
+        return "/a.png";
+    } // 정적인 파일
+
+    @GetMapping("/temp/jsp")
+    public String tempJsp() {
+        // prefix: /WEB-INF/views/
+        // suffix: .jsp
+        // 풀네임: /WEB-INF/views/test.jsp
+        return "test";
+    } // static 아래는 브라우저가 인식할 수 있는 파일만
 }
