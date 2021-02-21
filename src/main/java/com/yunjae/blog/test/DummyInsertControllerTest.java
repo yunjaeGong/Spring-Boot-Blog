@@ -58,17 +58,17 @@ public class DummyInsertControllerTest {
         return user;
     }
 
-    // http://localhost:8000/blog/dummy/join 요청
-    // http body(form)에 필요한 parameter 데이터를 가지고 요청 시 @RequestParam 없이도 데이터입력
+    // http://localhost:8000/blog/dummy/users 모든 유저들 정보 반환
     @GetMapping("/dummy/users")
     public List<User> list() {
         return userRepository.findAll();
     }
 
+    // http://localhost:8000/blog/dummy/user?page=x
     @GetMapping("/dummy/user")
     public List<User> pageList(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<User> pagingUser = userRepository.findAll(pageable); // 페이지 객체 리턴
-        List<User> users = pagingUser.getContent();
+        List<User> users = pagingUser.getContent(); // Page객체가 아닌 Page 내 Content만 반환
         return users;
     }
 
@@ -87,7 +87,7 @@ public class DummyInsertControllerTest {
         User user = userRepository.findById(id).orElseThrow(new Supplier<IllegalArgumentException>() {
             @Override
             public IllegalArgumentException get() {
-                return new IllegalArgumentException("id: " + id + " 해당 유저는 없습니다.");
+                return new IllegalArgumentException("id: " + id + " 해당 유저는 없습니다."); // GlobalExceptionHandler: handleArgumentException에 의해 처리됨
             }
         });
 //        User user = userRepository.findById(id).orElseThrow(()->{
@@ -100,6 +100,8 @@ public class DummyInsertControllerTest {
         return user;
     }
 
+    // http://localhost:8000/blog/dummy/join으로 Post요청
+    // http body(form)에 필요한 parameter 데이터를 가지고 요청 시 @RequestParam 없이도 데이터입력
     @PostMapping("/dummy/join")
     public String join(User user) { // object로 받을 수 있음 (form 이용)
         System.out.println("id: " + user.getId());
