@@ -17,10 +17,18 @@ public class UserApiController {
     private UserService userService;
 
     @PostMapping("/api/user")
-    public ResponseDto<Integer> save(@RequestBody User user) {
-        System.out.println("UserApiController: save 호출됨.");
+    public ResponseDto<Integer> join(@RequestBody User user) {
+        System.out.println("UserApiController: join 호출됨.");
         user.setRole(UserRoleType.USER);
-        int result = userService.join(user); // 회원가입 (Transaction)
-        return new ResponseDto<Integer>(HttpStatus.OK, result); // Java Object를 Json으로 변환해 반환
+        userService.join(user); // 회원가입 (Transaction)
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
+    }
+
+    @PostMapping("/api/user/login")
+    public ResponseDto<Integer> login(@RequestBody User user) {
+        System.out.println("UserApiController: login 호출됨.");
+        user.setRole(UserRoleType.USER);
+        User principal = userService.login(user); // 로그인 (Transaction), Principal: 접근주체
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 }

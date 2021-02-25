@@ -6,7 +6,7 @@
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>Bootstrap Example</title>
+        <title>Yunjae's Blog</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -15,8 +15,7 @@
     <body>
 
     <div class="container">
-        <h2>Stacked form</h2>
-        <form action="/action_page.php">
+        <form>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username">
@@ -32,8 +31,8 @@
                     <input class="form-check-input" type="checkbox" name="remember"> Remember me
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary">로그인</button>
         </form>
+        <button type="btn-login" class="btn btn-primary">로그인</button>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

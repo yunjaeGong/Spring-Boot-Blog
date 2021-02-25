@@ -18,4 +18,10 @@ public class UserService { // 서비스: 하나 이상의 crud (송금)
         userRepository.save(user);
         // GlobalExceptionHandler가 Exception 처리
     }
+
+    @Transactional
+    public void login(User user) { // 회원가입 서비스
+        userRepository.login(user);
+        // GlobalExceptionHandler가 Exception 처리
+    }
 }
