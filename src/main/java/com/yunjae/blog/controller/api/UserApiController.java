@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 public class UserApiController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    HttpSession session; // container에 존재
 
     @PostMapping("/api/user")
     public ResponseDto<Integer> join(@RequestBody User user) {
@@ -27,8 +32,11 @@ public class UserApiController {
     @PostMapping("/api/user/login")
     public ResponseDto<Integer> login(@RequestBody User user) {
         System.out.println("UserApiController: login 호출됨.");
-        user.setRole(UserRoleType.USER);
         User principal = userService.login(user); // 로그인 (Transaction), Principal: 접근주체
+        System.out.println(principal.toString()); // nullptr
+        if (principal.getUsername() != null) {
+            session.setAttribute("principal", principal); // 세션 생성
+        }
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 }
