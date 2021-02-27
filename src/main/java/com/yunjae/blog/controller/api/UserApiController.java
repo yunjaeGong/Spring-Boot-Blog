@@ -18,9 +18,6 @@ public class UserApiController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    HttpSession session; // container에 존재
-
     @PostMapping("/api/user")
     public ResponseDto<Integer> join(@RequestBody User user) {
         System.out.println("UserApiController: join 호출됨.");
@@ -29,8 +26,8 @@ public class UserApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
-    @PostMapping("/api/user/login")
-    public ResponseDto<Integer> login(@RequestBody User user) {
+    /*@PostMapping("/api/user/login")
+    public ResponseDto<Integer> login(@RequestBody User user, HttpSession session) {
         System.out.println("UserApiController: login 호출됨.");
         User principal = userService.login(user); // 로그인 (Transaction), Principal: 접근주체
         System.out.println(principal.toString()); // nullptr
@@ -38,5 +35,7 @@ public class UserApiController {
             session.setAttribute("principal", principal); // 세션 생성
         }
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
-    }
+    }*/
+
+
 }
