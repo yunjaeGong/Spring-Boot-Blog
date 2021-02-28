@@ -6,6 +6,7 @@ import com.yunjae.blog.model.UserRoleType;
 import com.yunjae.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,13 @@ public class UserApiController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/api/user")
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @PostMapping("/auth/join")
     public ResponseDto<Integer> join(@RequestBody User user) {
         System.out.println("UserApiController: join 호출됨.");
-        user.setRole(UserRoleType.USER);
+
         userService.join(user); // 회원가입 (Transaction)
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
@@ -35,7 +39,7 @@ public class UserApiController {
             session.setAttribute("principal", principal); // 세션 생성
         }
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
-    }*/
+    }*/ // 전통적인 방법(spring security 사용 x)
 
 
 }

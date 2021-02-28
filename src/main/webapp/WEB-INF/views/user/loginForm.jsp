@@ -14,7 +14,8 @@
     <body>
 
     <div class="container">
-        <form>
+        <form action="/auth/login" method="post">
+        <%-- spring security가 요청 가로챔 --%>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username">
@@ -30,8 +31,10 @@
                     <input class="form-check-input" type="checkbox" name="remember"> Remember me
                 </label>
             </div>
+            <button id="btn-login" class="btn btn-primary">로그인</button>
+            <%--폼 이용 로그인--%>
         </form>
-        <button id="btn-login" class="btn btn-primary">로그인</button>
+
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
