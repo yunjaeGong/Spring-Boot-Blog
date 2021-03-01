@@ -1,9 +1,10 @@
 let index = {
     init:function () {
-        /*$("#btn-save").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
+        $("#btn-save").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.save();
+            alert("회원가입 눌림.")
         });
-        $("#btn-login").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
+        /*$("#btn-login").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.login();
         });*/
     },

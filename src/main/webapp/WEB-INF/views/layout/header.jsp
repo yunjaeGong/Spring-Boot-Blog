@@ -4,6 +4,7 @@
 
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="principal" var="principal"/>
+    <%-- spring security의 세션 정보 principal로 받음 --%>
 </sec:authorize>
 
 <!DOCTYPE html>

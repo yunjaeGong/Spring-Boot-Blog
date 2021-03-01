@@ -28,7 +28,7 @@ public class User {
     @Column(nullable = false, length = 30, unique = true)
     private String username; // 아이디
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100)
     private String password; // hash로 암호화
 
     @Column(nullable = false, length = 40)

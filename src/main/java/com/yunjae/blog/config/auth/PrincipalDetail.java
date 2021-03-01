@@ -9,8 +9,12 @@ import java.util.Collection;
 
 // Spring Security가 로그인 요청을 가로채서 로그인을 요청하고, 완료되면 UserDetail 타입의 오브젝트를
 // Spring Security의 고유한 세션 저장소에 저장을 해준다
-public class principalDetail implements UserDetails {
+public class PrincipalDetail implements UserDetails {
     User user;
+
+    public PrincipalDetail(User user) {
+        this.user = user;
+    }
 
     @Override
     public String getPassword() {

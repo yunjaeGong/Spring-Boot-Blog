@@ -18,18 +18,11 @@
             <label for="email">Email</label>
             <input type="email" class="form-control" placeholder="Enter email" id="email">
         </div>
-        <%--Remember me--%>
-        <%--            <div class="form-group form-check">--%>
-        <%--                <label class="form-check-label">--%>
-        <%--                    <input class="form-check-input" type="checkbox" name="remember"> Remember me--%>
-        <%--                </label>--%>
-        <%--            </div>--%>
-
 
     </form>
     <button id="btn-save" class="btn btn-primary">회원가입완료</button>
 
 </div>
 
-<script src="/blog/js/user.js"></script>
+<script src="/js/user.js"></script>
 <%@ include file="../layout/footer.jsp"%>
