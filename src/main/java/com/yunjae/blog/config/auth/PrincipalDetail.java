@@ -1,6 +1,7 @@
 package com.yunjae.blog.config.auth;
 
 import com.yunjae.blog.model.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,6 +10,7 @@ import java.util.Collection;
 
 // Spring Security가 로그인 요청을 가로채서 로그인을 요청하고, 완료되면 UserDetail 타입의 오브젝트를
 // Spring Security의 고유한 세션 저장소에 저장을 해준다
+@Getter
 public class PrincipalDetail implements UserDetails {
     User user;
 

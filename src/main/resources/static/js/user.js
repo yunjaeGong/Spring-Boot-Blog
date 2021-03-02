@@ -2,7 +2,6 @@ let index = {
     init:function () {
         $("#btn-save").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.save();
-            alert("회원가입 눌림.")
         });
         /*$("#btn-login").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.login();
@@ -26,7 +25,6 @@ let index = {
             data_type: "json" // 응답으로 온 데이터가 문자열(json으로 변환 가능) => js 오브젝트로 변경
         }).done(function (resp) { // 성공 시
             alert("회원가입이 완료되었습니다.");
-            // alert(resp);
             location.href = "/";
             // 실패 시
         }).fail(function (error) {
