@@ -22,13 +22,37 @@ public class BoardService {
     private BoardRepository boardRepository;
 
     @Transactional
-    public void save(Board board, User user) { // 글쓰기 서비스
+    public void savePost(Board board, User user) { // 글쓰기 서비스
         board.setCount(0);
         board.setUser(user);
         boardRepository.save(board);
     }
 
+    @Transactional(readOnly = true)
     public Page<Board> getPosts(Pageable pageable) {
         return boardRepository.findAll(pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Board getPost(int id) {
+        return boardRepository.findById(id).orElseThrow(()->{
+            return new IllegalArgumentException("글 불러오기 실패: 아이디를 찾을 수 없습니다."); // TODO
+        });
+    }
+
+    @Transactional
+    public void updatePost(int id, Board requestBoard) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> {
+            return new IllegalArgumentException("글 불러오기 실패: 아이디를 찾을 수 없습니다.");
+        }); // 영속화 완료
+        board.setTitle(requestBoard.getTitle());
+        board.setContent(requestBoard.getContent());
+        // 해당함수(Service) 종료될 때 트랜잭션이 종료되고, Dirty Checking이 일어난다 -> 자동 업데이트
+    }
+
+    @Transactional
+    public void deletePost(int id) {
+        boardRepository.deleteById(id);
+    }
+
 }

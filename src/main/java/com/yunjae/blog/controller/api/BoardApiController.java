@@ -7,9 +7,7 @@ import com.yunjae.blog.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BoardApiController {
@@ -17,10 +15,22 @@ public class BoardApiController {
     @Autowired
     private BoardService boardService;
 
-    @PostMapping("/api/board")
+    @PostMapping("/api/board/save")
     public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) {
-        boardService.save(board, principal.getUser());
+        boardService.savePost(board, principal.getUser());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
+    }
+
+    @DeleteMapping("/api/board/{id}")
+    public ResponseDto<Integer> delete(@PathVariable int id) {
+        boardService.deletePost(id);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+    }
+
+    @PutMapping("/api/board/{id}")
+    public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board requestBoard) {
+        boardService.updatePost(id, requestBoard);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
     /*@PostMapping("/api/user/login")
