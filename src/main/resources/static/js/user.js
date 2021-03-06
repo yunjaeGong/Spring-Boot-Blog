@@ -3,6 +3,9 @@ let index = {
         $("#btn-save").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.save();
         });
+        $("#btn-update").on("click", ()=> {
+            this.save();
+        });
         /*$("#btn-login").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.login();
         });*/
@@ -31,6 +34,29 @@ let index = {
             alert(JSON.stringify(error));
         })
     },
+    update: function () {
+        let id = $("#id").val();
+        let data = {
+            password: $("#password").val(),
+            email: $("#email").val()
+        };
+
+        // ajax 요청을 이용, 3개의 데이터를 json으로 변경해 insert 요청
+        // ajax가 통신에 성공하고 서버가 json을 반환해주면 자동으로 Js 오브젝트로 변환
+        $.ajax({
+            type: "PUT",
+            url: "/user",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            data_type: "json"
+        }).done(function (resp) {
+            alert("회원정보 수정이 완료되었습니다.");
+            location.href = "/user/updateForm";
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        })
+    }
+
     /*login: function () {
     // spring security 이용하지 않는 로그인
         let data = {

@@ -41,6 +41,6 @@ public class BoardController {
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model) { // model은 해당 데이터를 가지고 view까지 이동
         model.addAttribute("board", boardService.getPost(id));
-        return "board/updateForm";
+        return "board/updatePostForm";
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,10 +25,16 @@ public class UserApiController {
 
     @PostMapping("/auth/join")
     public ResponseDto<Integer> join(@RequestBody User user) {
-        System.out.println("UserApiController: join 호출됨.");
+        // System.out.println("UserApiController: join 호출됨.");
 
         userService.join(user); // 회원가입 (Transaction)
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
+    }
+
+    @PutMapping
+    public ResponseDto<Integer> update(@RequestBody User user) {
+        userService.update(user);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
     /*@PostMapping("/api/user/login")
