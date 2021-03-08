@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Map;
+
 @Controller
 public class BoardController {
 
@@ -21,6 +23,8 @@ public class BoardController {
     @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 8, sort = "createDate", direction = Sort.Direction.ASC)Pageable pageable) {
         model.addAttribute("boards", boardService.getPosts(pageable));
+        Map<String, Integer> configs = Map.of("maxPages",8);
+        model.addAllAttributes(configs);
         // 컨트롤러에서 세션 정보를 어떻게 찾는지?
         // 반환된 블로그 post들이 index 페이지의 items="${boards}로 전달
         return "index"; // viewResolver 작동 /WEB-INF/views/index.jsp

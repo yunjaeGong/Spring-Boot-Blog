@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PrincipalDetailService implements UserDetailsService {
-
+    // Request 오면 filter -> Token 발급 -> UserDetailService 통해 PrincipalService로 유저 정보 전달 (비밀번호는 AuthenticationManager가 디코딩 후 비교)
     @Autowired
     private UserRepository userRepository;
 

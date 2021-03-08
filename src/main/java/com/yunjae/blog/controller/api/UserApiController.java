@@ -1,11 +1,13 @@
 package com.yunjae.blog.controller.api;
 
+import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.dto.ResponseDto;
 import com.yunjae.blog.model.User;
 import com.yunjae.blog.model.UserRoleType;
 import com.yunjae.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,9 +33,11 @@ public class UserApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
-    @PutMapping
-    public ResponseDto<Integer> update(@RequestBody User user) {
+    @PutMapping("/user")
+    public ResponseDto<Integer> update(@RequestBody User user, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         userService.update(user);
+        // 여기부터 트랜잭션이 종료된 상태이기 때문에 새로운 값은 DB에 반영
+        // 세션 값은 변경되지 않은 상태이기 때문에 직접 세션 값 변경 필요
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 

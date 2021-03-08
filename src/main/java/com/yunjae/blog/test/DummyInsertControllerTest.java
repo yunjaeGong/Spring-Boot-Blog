@@ -66,10 +66,10 @@ public class DummyInsertControllerTest {
 
     // http://localhost:8000/blog/dummy/user?page=x
     @GetMapping("/dummy/user")
-    public List<User> pageList(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<User> pageList(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<User> pagingUser = userRepository.findAll(pageable); // 페이지 객체 리턴
         List<User> users = pagingUser.getContent(); // Page객체가 아닌 Page 내 Content만 반환
-        return users;
+        return pagingUser;
     }
 
     // {id}주소로 parameter를 전달 받을 수 있음

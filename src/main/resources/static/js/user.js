@@ -4,7 +4,7 @@ let index = {
             this.save();
         });
         $("#btn-update").on("click", ()=> {
-            this.save();
+            this.update();
         });
         /*$("#btn-login").on("click", ()=> { // function() {}대신 ()=>{} 이유? this를 바인딩 하기 위해
             this.login();
@@ -35,8 +35,8 @@ let index = {
         })
     },
     update: function () {
-        let id = $("#id").val();
         let data = {
+            id: $("#id").val(),
             password: $("#password").val(),
             email: $("#email").val()
         };
@@ -51,7 +51,7 @@ let index = {
             data_type: "json"
         }).done(function (resp) {
             alert("회원정보 수정이 완료되었습니다.");
-            location.href = "/user/updateForm";
+            location.href = "/";
         }).fail(function (error) {
             alert(JSON.stringify(error));
         })

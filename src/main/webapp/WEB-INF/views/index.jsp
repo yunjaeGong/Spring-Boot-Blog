@@ -17,6 +17,11 @@
         </div>
     </c:forEach>
 
+    <%-- pagination --%>
+
+    <%-- 표시될 최대 페이지 수(8) --%>
+    <c:set var="pageLimit" value="${boards.totalPages>maxPage?maxPage:boards.totalPages}"/>
+
     <ul class="pagination justify-content-center">
         <c:choose>
             <c:when test="${boards.first}">
@@ -26,6 +31,11 @@
                 <li class="page-item"><a class="page-link" href="?page=${boards.number-1}">Prev</a></li>
             </c:otherwise>
         </c:choose>
+
+        <c:forEach var="i" begin="0" end="${pageLimit-1}">
+            <li <c:if test="${i eq boards.number}">class="page-item active"</c:if>><a class="page-link" href="?page=${i}">${i+1}</a></li>
+        </c:forEach>
+
         <c:choose>
             <c:when test="${boards.last}">
                 <li class="page-item disabled"><a class="page-link" href="?page=${boards.number+1}">Next</a></li>
