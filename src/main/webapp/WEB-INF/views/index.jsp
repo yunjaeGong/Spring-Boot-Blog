@@ -19,7 +19,7 @@
 
     <%-- pagination --%>
 
-    <%-- 표시될 최대 페이지 수(8) --%>
+    <%-- 표시될 최대 페이지 수(maxPage) --%>
     <c:set var="pageLimit" value="${boards.totalPages>maxPage?maxPage:boards.totalPages}"/>
 
     <ul class="pagination justify-content-center">

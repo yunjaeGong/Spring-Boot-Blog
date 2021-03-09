@@ -28,7 +28,16 @@
         <a href="/board/${board.id}/updateForm" class="btn btn-warning">수정</a>
     </c:if>
 
+    <%-- replies --%>
+    <div>
+        <div class="card">
+            <div class="card-body "><textarea class="form-control" rows="1"></textarea></div>
+            <div  class="card-footer"><button class="btn-primary">등록</button></div>
+        </div>
+    </div>
+
 </div>
+
 
 <script src="/js/board.js"></script>
 

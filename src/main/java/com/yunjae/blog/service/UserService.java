@@ -4,6 +4,10 @@ import com.yunjae.blog.model.User;
 import com.yunjae.blog.model.UserRoleType;
 import com.yunjae.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ public class UserService { // 서비스: 하나 이상의 crud (송금)
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
 
     @Transactional
     public void join(User user) { // 회원가입 서비스
