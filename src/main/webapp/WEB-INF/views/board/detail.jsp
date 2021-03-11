@@ -182,7 +182,7 @@
 
         <br/>
         <ul class="replies">
-            <%--<c:forEach var="reply" items="${board.replies}">
+            <c:forEach var="reply" items="${board.replies}">
                 <li id="reply--1" class="reply">
                     <div class="reply-wrapper">
                         <div class="card">
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                 </li>
-            </c:forEach>--%>
+            </c:forEach>
         </ul>
 
         <div class="card">

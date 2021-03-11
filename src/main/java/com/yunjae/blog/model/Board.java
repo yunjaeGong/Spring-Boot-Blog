@@ -1,10 +1,11 @@
 package com.yunjae.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -36,6 +37,8 @@ public class Board {
     // sql에서는 userId integer로 생성
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER) // 일대 다 관계(게시글 < 댓글), OneToMany 관계는 기본 fetch 전략이 LazyLoading(데이터가 많기때문)
+    @JsonIgnoreProperties({"board"})
+    @OrderBy("createDate desc")
     private List<Reply> replies; // mappedBy: Board 테이블의 FK가 아님. Reply 테이블의 FK를 참조
 
     @CreationTimestamp
