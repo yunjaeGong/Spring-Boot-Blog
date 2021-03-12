@@ -22,7 +22,7 @@ public class Reply {
 
     @Lob
     @Column(nullable = false)
-    private StringBuilder content;
+    private String content;
 
     @ManyToOne // 여러 답글 > 게시글
     @JoinColumn(name = "boardId")
