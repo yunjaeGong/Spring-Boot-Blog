@@ -1,10 +1,13 @@
 package com.yunjae.blog.service;
 
 import com.yunjae.blog.model.Board;
+import com.yunjae.blog.model.Reply;
 import com.yunjae.blog.model.User;
 import com.yunjae.blog.model.UserRoleType;
 import com.yunjae.blog.repository.BoardRepository;
+import com.yunjae.blog.repository.ReplyRepository;
 import com.yunjae.blog.repository.UserRepository;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,9 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Transactional
     public void savePost(Board board, User user) { // 글쓰기 서비스
         board.setCount(0);
@@ -36,7 +42,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Board getPost(int id) {
         return boardRepository.findById(id).orElseThrow(()->{
-            return new IllegalArgumentException("글 불러오기 실패: 아이디를 찾을 수 없습니다."); // TODO
+            return new IllegalArgumentException("글 찾기 실패: 아이디를 찾을 수 없습니다."); // TODO
         });
         // Board에는 List<Reply> 존재
     }
@@ -44,7 +50,7 @@ public class BoardService {
     @Transactional
     public void updatePost(int id, Board requestBoard) {
         Board board = boardRepository.findById(id).orElseThrow(() -> {
-            return new IllegalArgumentException("글 불러오기 실패: 아이디를 찾을 수 없습니다.");
+            return new IllegalArgumentException("글 찾기 실패: 아이디를 찾을 수 없습니다.");
         }); // 영속화 완료
         board.setTitle(requestBoard.getTitle());
         board.setContent(requestBoard.getContent());
@@ -54,6 +60,17 @@ public class BoardService {
     @Transactional
     public void deletePost(int id) {
         boardRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void saveReply(User principal, int boardId, Reply requestReply) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> {
+            return new IllegalIdentifierException("댓글 쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
+        });
+        requestReply.setUser(principal);
+        requestReply.setBoard(board);
+
+        replyRepository.save(requestReply);
     }
 
 }

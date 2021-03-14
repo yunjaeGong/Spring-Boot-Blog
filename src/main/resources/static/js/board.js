@@ -11,6 +11,10 @@ let index = {
         $("#btn-update").on("click", ()=> {
             this.update();
         });
+
+        $("#btn-reply").on("click", ()=> {
+            this.saveReply();
+        });
     },
     save: function () {
         let data = {
@@ -55,7 +59,7 @@ let index = {
         };
         $.ajax({
             type: "PUT",
-            url: "/api/board/" + id,
+            url: "/api/board/" + id + "/reply",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             data_type: "json"
@@ -64,6 +68,27 @@ let index = {
             location.href = "/";
         }).fail(function (error) {
             alert("/api/board/" + id);
+            alert(JSON.stringify(error));
+        });
+    },
+    saveReply: function () {
+        let boardId = $("#boardId").val();
+        let data = {
+            content: $("#replyContent").val()
+        };
+
+        console.log(data);
+
+        $.ajax({
+            type: "POST",
+            url: `/api/board/${boardId}/reply`,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            data_type: "json"
+        }).done(function (resp) {
+            alert("댓글 쓰기가 완료되었습니다.");
+            location.href = `/board/${boardId}`;
+        }).fail(function (error) {
             alert(JSON.stringify(error));
         });
     }

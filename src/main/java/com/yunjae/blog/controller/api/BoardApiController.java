@@ -3,10 +3,12 @@ package com.yunjae.blog.controller.api;
 import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.dto.ResponseDto;
 import com.yunjae.blog.model.Board;
+import com.yunjae.blog.model.Reply;
 import com.yunjae.blog.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +27,12 @@ public class BoardApiController {
     public ResponseDto<Integer> delete(@PathVariable int id) {
         boardService.deletePost(id);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+    }
+
+    @PostMapping("/api/board/{boardId}/reply")
+    public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+        boardService.saveReply(principal.getUser(), boardId, reply);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
     @PutMapping("/api/board/{id}")
