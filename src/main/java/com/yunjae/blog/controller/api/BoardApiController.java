@@ -1,6 +1,7 @@
 package com.yunjae.blog.controller.api;
 
 import com.yunjae.blog.config.auth.PrincipalDetail;
+import com.yunjae.blog.dto.ReplySaveRequestDto;
 import com.yunjae.blog.dto.ResponseDto;
 import com.yunjae.blog.model.Board;
 import com.yunjae.blog.model.Reply;
@@ -29,15 +30,18 @@ public class BoardApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
+    // DTO 사용하는게 좋다
     @PostMapping("/api/board/{boardId}/reply")
-    public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
-        boardService.saveReply(principal.getUser(), boardId, reply);
+    // public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+    public ResponseDto<Integer> save(@RequestBody ReplySaveRequestDto replySaveRequestDto, @AuthenticationPrincipal PrincipalDetail principal) {
+        boardService.saveReply(replySaveRequestDto);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
     @PutMapping("/api/board/{id}")
     public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board requestBoard) {
         boardService.updatePost(id, requestBoard);
+        // sqlSave(requestBoard) - native query
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 

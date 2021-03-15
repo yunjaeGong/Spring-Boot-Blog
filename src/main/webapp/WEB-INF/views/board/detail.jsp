@@ -37,10 +37,13 @@
         position: relative;
         padding-top: 8px;
         padding-bottom: 8px;
-    }
-    ul.replies li.reply .card .card-header h5{
-        font-size: 20px;
         margin-bottom: 0;
+        line-height: 20px;
+        vertical-align: bottom;
+    }
+    ul.replies li.reply .card .card-header .username{
+        font-size: 20px;
+        font-weight: normal;
     }
     ul.replies li.reply .card .card-header img {
         width: 32px;
@@ -49,6 +52,7 @@
     ul.replies li.reply .card .card-header .reply-date {
         font-size: 14px;
         color: #bbb;
+        margin-left: 8px;
     }
     ul.replies li.reply .card .card-header .ribbon {
         width: 40px;
@@ -154,7 +158,10 @@
 
     <div>
         <div class="card mb-2">
+
             <input type="hidden" id="boardId" value="${board.id}"/>
+            <input type="hidden" id="userId" value="${principal.user.id}"/>
+
             <div class="card-header d-flex align-items-center">
                 <p class="d-flex align-items-center"><h5 style="color: dimgray;font-size: 16px;line-height: 1;margin: 0 10px;">Reply</h5></p>
             </div>
@@ -191,12 +198,9 @@
                 <li id="reply--1" class="reply">
                     <div class="reply-wrapper">
                         <div class="card">
-
-                            <div class="card-header d-flex align-items-center">
-                                <a href="#" class="d-flex align-items-center"><h5>${reply.user.username}</h5></a>
-                                <div class="reply-date ml-2 align-items-center" data-toggle="tooltip" title="Feb 5, 2018 8:21 pm"
-                                     data-placement="top" data-original-title="Feb 5, 2018 8:21 pm">${reply.createDate}
-                                </div>
+                            <div class="card-header">
+                                <a href="#" class="username">${reply.user.username}</a>
+                                <span class="reply-date">${reply.createDate}</span>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">${reply.content}</p>

@@ -72,8 +72,9 @@ let index = {
         });
     },
     saveReply: function () {
-        let boardId = $("#boardId").val();
         let data = {
+            userId: $("#userId").val(),
+            boardId: $("#boardId").val(),
             content: $("#replyContent").val()
         };
 
@@ -81,13 +82,13 @@ let index = {
 
         $.ajax({
             type: "POST",
-            url: `/api/board/${boardId}/reply`,
+            url: `/api/board/${data.boardId}/reply`,
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             data_type: "json"
         }).done(function (resp) {
             alert("댓글 쓰기가 완료되었습니다.");
-            location.href = `/board/${boardId}`;
+            location.href = `/board/${data.boardId}`;
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });

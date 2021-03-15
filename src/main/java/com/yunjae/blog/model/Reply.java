@@ -1,5 +1,6 @@
 package com.yunjae.blog.model;
 
+import com.yunjae.blog.dto.ReplySaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class Reply {
 
     @CreationTimestamp
     private Timestamp createDate;
+
 }
 
 

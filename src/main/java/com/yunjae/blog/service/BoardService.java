@@ -1,5 +1,6 @@
 package com.yunjae.blog.service;
 
+import com.yunjae.blog.dto.ReplySaveRequestDto;
 import com.yunjae.blog.model.Board;
 import com.yunjae.blog.model.Reply;
 import com.yunjae.blog.model.User;
@@ -23,6 +24,9 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ReplyRepository replyRepository;
@@ -63,14 +67,23 @@ public class BoardService {
     }
 
     @Transactional
-    public void saveReply(User principal, int boardId, Reply requestReply) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> {
+    public void saveReply(ReplySaveRequestDto replySaveRequestDto) {
+
+        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(() -> {
+            return new IllegalIdentifierException("댓글 쓰기 실패: 유저 아이디를 찾을 수 없습니다.");
+        });
+
+        Board board = boardRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
         });
-        requestReply.setUser(principal);
-        requestReply.setBoard(board);
 
-        replyRepository.save(requestReply);
+        Reply reply = Reply.builder()
+                .user(user)
+                .board(board)
+                .content(replySaveRequestDto.getContent())
+                .build();
+
+        replyRepository.save(reply);
     }
 
 }
