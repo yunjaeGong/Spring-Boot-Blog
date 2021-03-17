@@ -35,13 +35,14 @@ public class BoardApiController {
     // public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
     public ResponseDto<Integer> save(@RequestBody ReplySaveRequestDto replySaveRequestDto, @AuthenticationPrincipal PrincipalDetail principal) {
         boardService.saveReply(replySaveRequestDto);
+        // sqlSave(requestBoard) - native query
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
     @PutMapping("/api/board/{id}")
     public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board requestBoard) {
         boardService.updatePost(id, requestBoard);
-        // sqlSave(requestBoard) - native query
+
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 

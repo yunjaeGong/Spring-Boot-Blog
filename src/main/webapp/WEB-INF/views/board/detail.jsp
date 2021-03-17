@@ -200,14 +200,21 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="#" class="username">${reply.user.username}</a>
-                                <span class="reply-date">${reply.createDate}</span>
+
+                                <span class="reply-date"><fmt:formatDate type="both" dateStyle="medium" timeStyle="medium"  value="${reply.createDate}" /></span>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">${reply.content}</p>
                             </div>
                             <div class="card-footer bg-white p-2">
                                 <button id="btn-nested-reply" type="button" class="btn btn-secondary btn-sm">Reply</button>
-                                <small class="text-muted ml-2">Last updated 3 mins ago</small>
+                                <small class="text-muted ml-2">Last updated 3 mins ago</small > <%--TODO: 업데이트된 시간{x mins ago, x days 7], x week, a year, ""}--%>
+                                <span class="float-right">
+                                    <c:choose><c:when test="${board.user.id == principal.user.id}">
+                                    <a href="#" class="btn btn-danger btn-sm">삭제</a>
+                                    <a href="#" class="btn btn-warning btn-sm">수정</a>
+                                </c:when></c:choose>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -215,7 +222,7 @@
             </c:forEach>
         </ul>
 
-        <div class="card">
+        <%--<div class="card">
             <div class="card-header">댓글 리스트</div>
             <ul class="list-group">
                 <div class="d-flex justify-content-between p-2" style="border-style: none;">
@@ -227,7 +234,7 @@
                     <div>댓글 내용</div>
                 </li>
             </ul>
-        </div>
+        </div>--%>
     </div>
 </div>
 

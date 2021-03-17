@@ -37,7 +37,7 @@ public class Board {
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER) // 일대 다 관계(게시글 < 댓글), OneToMany 관계는 기본 fetch 전략이 LazyLoading(데이터가 많기때문)
     @JsonIgnoreProperties({"board"})
-    @OrderBy("createDate desc")
+    @OrderBy("createDate asc")
     private List<Reply> replies; // mappedBy: Board 테이블의 FK가 아님. Reply 테이블의 FK를 참조
 
     @CreationTimestamp

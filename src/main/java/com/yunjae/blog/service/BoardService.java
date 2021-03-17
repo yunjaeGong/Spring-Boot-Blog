@@ -68,22 +68,21 @@ public class BoardService {
 
     @Transactional
     public void saveReply(ReplySaveRequestDto replySaveRequestDto) {
-
         User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 유저 아이디를 찾을 수 없습니다.");
         });
 
-        Board board = boardRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(() -> {
+        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
         });
 
-        Reply reply = Reply.builder()
+        /*Reply reply = Reply.builder()
                 .user(user)
                 .board(board)
                 .content(replySaveRequestDto.getContent())
-                .build();
-
-        replyRepository.save(reply);
+                .build();*/
+        replyRepository.sqlSave(user.getId(), board.getId(), replySaveRequestDto.getContent());
+        // replyRepository.save(reply);
     }
 
 }

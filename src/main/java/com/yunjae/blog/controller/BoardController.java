@@ -23,7 +23,7 @@ public class BoardController {
     @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 8, sort = "createDate", direction = Sort.Direction.ASC)Pageable pageable) {
         model.addAttribute("boards", boardService.getPosts(pageable));
-        Map<String, Integer> configs = Map.of("maxPages",8);
+        Map<String, Integer> configs = Map.of("maxPages",8); // TODO: json으로 전달 가능?
         model.addAllAttributes(configs);
         // 컨트롤러에서 세션 정보를 어떻게 찾는지?
         // 반환된 블로그 post들이 index 페이지의 items="${boards}로 전달
