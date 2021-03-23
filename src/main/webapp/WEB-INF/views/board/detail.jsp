@@ -188,14 +188,14 @@
         </div>
 
 
-        <%-- https://github.com/ZsharE/threaded-replys-bootstrap --%>
+        <%-- https://github.com/ZsharE/threaded-comments-bootstrap --%>
         <%-- TODO: MIT License 표기 --%>
         <%-- replies --%>
-
+        <%-- wrapper 안에 reply class들--%>
         <br/>
         <ul class="replies">
             <c:forEach var="reply" items="${board.replies}">
-                <li id="reply--1" class="reply">
+                <li id="reply-${reply.id}" class="reply">
                     <div class="reply-wrapper">
                         <div class="card">
                             <div class="card-header">
@@ -211,9 +211,9 @@
                                 <small class="text-muted ml-2">Last updated 3 mins ago</small > <%--TODO: 업데이트된 시간{x mins ago, x days 7], x week, a year, ""}--%>
                                 <span class="float-right">
                                     <c:choose><c:when test="${board.user.id == principal.user.id}">
-                                    <a href="#" class="btn btn-danger btn-sm">삭제</a>
-                                    <a href="#" class="btn btn-warning btn-sm">수정</a>
-                                </c:when></c:choose>
+                                        <button onclick="index.replyDelete(${board.id},${reply.id}" class="btn btn-danger btn-sm">삭제</button>
+                                        <button onclick="index.replyDelete(${board.id},${reply.id}" class="btn btn-warning btn-sm">수정</button>
+                                    </c:when></c:choose>
                                 </span>
                             </div>
                         </div>
@@ -221,20 +221,6 @@
                 </li>
             </c:forEach>
         </ul>
-
-        <%--<div class="card">
-            <div class="card-header">댓글 리스트</div>
-            <ul class="list-group">
-                <div class="d-flex justify-content-between p-2" style="border-style: none;">
-                    <div>작성자 : username &nbsp;</div>
-                    <button class="btn-danger badge">삭제</button>
-                </div>
-
-                <li class="list-group-item d-flex justify-content-between" style="border-style: solid none none none">
-                    <div>댓글 내용</div>
-                </li>
-            </ul>
-        </div>--%>
     </div>
 </div>
 

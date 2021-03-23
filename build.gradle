@@ -28,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-taglibs'
 	implementation 'javax.servlet:jstl:1.2' // JSTL
 
+	implementation 'com.h2database:h2'
+
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly 'org.apache.tomcat:tomcat-jasper:9.0.41' // jsp템플릿 엔진
 

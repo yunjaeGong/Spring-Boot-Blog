@@ -35,7 +35,8 @@ public class Board {
     private User user; // BD는 오프젝트 저장 불가. (원래는 FK 사용), 자바는 오브젝트를 저장할 수 있다.
     // sql에서는 userId integer로 생성
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER) // 일대 다 관계(게시글 < 댓글), OneToMany 관계는 기본 fetch 전략이 LazyLoading(데이터가 많기때문)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE) // 일대 다 관계(게시글 < 댓글), OneToMany 관계는 기본 fetch 전략이 LazyLoading(데이터가 많기때문)
+    // 게시글 지우면 Cascade 삭제
     @JsonIgnoreProperties({"board"})
     @OrderBy("createDate asc")
     private List<Reply> replies; // mappedBy: Board 테이블의 FK가 아님. Reply 테이블의 FK를 참조

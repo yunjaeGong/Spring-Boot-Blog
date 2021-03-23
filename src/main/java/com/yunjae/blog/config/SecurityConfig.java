@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
              .csrf().disable() // TODO: csrf토큰 활성화
              .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/static/**", "/board/**")
+                .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/static/**", "/board/**", "/h2-console/**")
                 .permitAll() // /auth/* 경로는 누구나 접근 가능
                 .anyRequest()
                 .authenticated()
