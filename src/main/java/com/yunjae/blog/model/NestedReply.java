@@ -20,7 +20,7 @@ public class NestedReply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int parent_id;
+    private int parenId;
 
     @Lob
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class NestedReply {
 
     private int depth;
 
-    private int order;
+    private int replyOrder;
 
     @CreationTimestamp
     private Timestamp createDate;

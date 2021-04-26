@@ -24,6 +24,7 @@
             <c:set var="pageLimit" value="${boards.totalPages>maxPage?maxPage:boards.totalPages}"/>
 
             <ul class="pagination justify-content-center">
+                <%-- prev button --%>
                 <c:choose>
                     <c:when test="${boards.first}">
                         <li class="page-item disabled"><a class="page-link" href="?page=${boards.number-1}">Prev</a>
@@ -34,12 +35,13 @@
                     </c:otherwise>
                 </c:choose>
 
-                <c:forEach var="i" begin="0" end="${pageLimit-1}">
-                    <li <c:if test="${i eq boards.number}">class="page-item active"</c:if>><a class="page-link"
-                                                                                              href="?page=${i}">${i+1}</a>
+                <c:forEach var="i" begin="1" end="${pageLimit}">
+                    <li <c:if test="${i-1 eq boards.number}">class="page-item active"</c:if>><a class="page-link"
+                                                                                              href="?page=${i-1}">${i}</a>
                     </li>
                 </c:forEach>
 
+                <%-- next button --%>
                 <c:choose>
                     <c:when test="${boards.last}">
                         <li class="page-item disabled"><a class="page-link" href="?page=${boards.number+1}">Next</a>
@@ -51,6 +53,7 @@
                 </c:choose>
             </ul>
         </div>
+
         <aside class="col-md-4 blog-sidebar">
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">About</h4>

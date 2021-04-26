@@ -28,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-taglibs'
 	implementation 'javax.servlet:jstl:1.2' // JSTL
 
+	implementation 'com.auth0:java-jwt:3.15.0'
+
 	implementation 'com.h2database:h2'
 
 	compileOnly 'org.projectlombok:lombok'

@@ -39,7 +39,7 @@ public class Board {
     // 게시글 지우면 Cascade 삭제
     @JsonIgnoreProperties({"board"})
     @OrderBy("createDate asc")
-    private List<Reply> replies; // mappedBy: Board 테이블의 FK가 아님. Reply 테이블의 FK를 참조
+    private List<NestedReply> replies; // mappedBy: Board 테이블의 FK가 아님. Reply 테이블의 FK를 참조
 
     @CreationTimestamp
     private Timestamp createDate;

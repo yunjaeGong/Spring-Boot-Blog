@@ -68,7 +68,8 @@ public class BoardService {
 
     @Transactional
     public void saveReply(ReplySaveRequestDto replySaveRequestDto) {
-        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(() -> {
+        System.out.println("saveReply " + replySaveRequestDto.getUserId());
+        User user = userRepository.findByUsername(replySaveRequestDto.getUserId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 유저 아이디를 찾을 수 없습니다.");
         });
 

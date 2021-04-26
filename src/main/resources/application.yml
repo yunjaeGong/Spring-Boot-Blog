@@ -14,13 +14,19 @@ spring:
       suffix: .jsp
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
-    username: admin
-    password: ysj647297!
-
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost:9092/./testdb
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+#  MYSQL
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
+#    username: admin
+#    password: ysj647297!
 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: true
     hibernate:
       ddl-auto: update
