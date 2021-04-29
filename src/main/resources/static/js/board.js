@@ -74,8 +74,12 @@ let index = {
     saveReply: function () {
         let data = {
             userId: $("#userId").val(),
+            password: $("#password").val(),
             boardId: $("#boardId").val(),
-            content: $("#replyContent").val()
+            content: $("#replyContent").val(),
+            parentId: 0,
+            depth: 0,
+            rootId: 0,
         };
 
         console.log(data);
@@ -108,20 +112,21 @@ let index = {
 
         $.ajax({
             type: "POST",
-            url: `/auth/login`,
+            url: `/auth/login`, // TODO: join & login을 하도록 바꾸기
             data: JSON.stringify({username: data.userId, password: data.password}),
             contentType: "application/json; charset=utf-8",
             data_type: "json"
+            // 입력한 로그인 정보로 ajax 로그인 요청
         }).done(function (resp) {
             $.ajax({
                 type: "POST",
-                url: `/api/board/nestedReply`,
+                url: `/api/board/reply`,
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 data_type: "json"
             }).done(function (resp) {
                 alert("대댓글 쓰기가 완료되었습니다.");
-                location.href = `/replyTest1`;
+                location.href = `/board/${data.boardId}`;
             }).fail(function (error) {
                 alert(JSON.stringify(error));
             });

@@ -122,6 +122,11 @@
         bottom: 50%;
         z-index: 1;
     }
+    .n-reply {
+        padding: 8px;
+        margin-left: 24px;
+        margin-bottom: 8px;
+    }
 
 </style>
 
@@ -169,9 +174,9 @@
                 <c:when test="${empty principal}">
                     <div class="form-inline my-2">
                         <label for="userId"></label>
-                        <input type="text" class="form-control ml-2" placeholder="Id" id="userId">
+                        <input type="text" class="form-control ml-2" placeholder="id" id="userId">
                         <label for="replyPassword"></label>
-                        <input type="text" class="form-control ml-2" placeholder="Password" id="replyPassword">
+                        <input type="text" class="form-control ml-2" placeholder="password" id="replyPassword">
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -268,79 +273,83 @@
                 </li>
             </c:forEach>
         </ul>--%>
-
-        <c:forEach var="reply" items="${rootReplies}" varStatus="rootStatus">
-            <div class="d-flex flex-flow row">
-                <div class="col-lg-10">
-                    <div class="d-flex flex-column comment-section mb-2" id="myGroup">
-                        <div class="bg-white p-2">
-                            <div class="d-flex flex-row user-info">
-                                    <%--<div class="form-inline my-2">
-                                        <label for="replyId"></label>
-                                        <input type="text" class="form-control ml-2" placeholder="Id" id="replyId">
-                                        <label for="replyPassword"></label>
-                                        <input type="text" class="form-control ml-2" placeholder="Password" id="replyPassword">
-                                    </div>--%>
-                                <span class="fs-16">${reply.user.userId}</span>
-                                    <%--<div class="d-flex flex-column justify-content-start ml-2"><span class="d-block font-weight-bold name">Marry Andrews</span><span class="date text-black-50">Shared publicly - Jan 2020</span></div>--%>
-                            </div>
-                            <div class="mt-2 mx-2">
-                                <p class="comment-text">${reply.content}</p>
-                            </div>
-                        </div>
-                        <div class="bg-light p-2">
-                            <div class="d-flex fs-12">
-                                <div class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-${rootStatus.count}" href="#collapse-${rootStatus.count}"><button class="btn btn-primary btn-sm ml-2">Reply</button></div>
-                            </div>
-                        </div>
-
-                            <%-- Collapsible --%>
-                        <div id="collapse-${rootStatus.count}" class="bg-light p-2 collapse">
-                                <%-- nested replies --%>
-                            <c:forEach var="nestedReply" items="${nestedReplies}" varStatus="status">
-                                <c:if test="${nestedReply.parentId eq reply.id}">
-                                    <div class="bg-white n-reply">
-                                        <div class="d-flex flex-row user-info">
-                                            <span class="fs-16">${nestedReply.user.userId}</span>
-                                                <%--<div class="d-flex flex-column justify-content-start ml-2"><span class="d-block font-weight-bold name">Marry Andrews</span><span class="date text-black-50">Shared publicly - Jan 2020</span></div>--%>
+            <c:forEach var="reply" items="${rootReplies}" varStatus="rootStatus">
+                <div class="d-flex flex-flow row">
+                    <div class="col-lg-10">
+                        <div class="d-flex flex-column comment-section mb-2" id="myGroup">
+                            <div class="bg-white p-2">
+                                <div class="d-flex flex-row user-info">
+                                        <%--<div class="form-inline my-2">
+                                            <label for="replyId"></label>
+                                            <input type="text" class="form-control ml-2" placeholder="id" id="replyId">
+                                            <label for="replyPassword"></label>
+                                            <input type="text" class="form-control ml-2" placeholder="password" id="replyPassword">
+                                        </div>--%>
+                                        <%-- Displayed Reply Principal --%>
+                                        <div class="d-flex flex-column justify-content-start ml-2">
+                                            <span class="d-block font-weight-bold name">${reply.user.username}</span>
+                                            <span class="date text-black-50"><fmt:formatDate value="${reply.user.createDate}" pattern="MM yyyy"/></span>
                                         </div>
-                                        <div class="mt-2 mx-2">
-                                            <p class="comment-text">${nestedReply.content}</p>
-                                        </div>
-                                    </div>
-                                </c:if>
-                            </c:forEach>
-
-                                <%--nested reply post--%>
-                                <%--principal--%>
-                            <div class="d-flex flex-row user-info">
-                                <div class="form-inline my-2">
-                                    <label for="nestedReplyId-${reply.id}"></label>
-                                    <input type="text" class="form-control ml-2" placeholder="Id" id="nestedReplyId-${reply.id}">
-                                    <label for="nestedReplyPassword-${reply.id}"></label>
-                                    <input type="text" class="form-control ml-2" placeholder="Password" id="nestedReplyPassword-${reply.id}">
+                                </div>
+                                <div class="mt-2 mx-2">
+                                    <p class="comment-text">${reply.content}</p>
+                                </div>
+                            </div>
+                            <div class="bg-light p-2">
+                                <div class="d-flex fs-12">
+                                    <div class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-${rootStatus.count}" href="#collapse-${rootStatus.count}"><button class="btn btn-secondary btn-sm ml-2">Reply</button></div>
                                 </div>
                             </div>
 
-                            <div class="d-flex flex-row align-items-start">
-                                <label>
-                                    <textarea class="form-control ml-1 shadow-none textarea" id="nestedReplyContent-${reply.id}"></textarea>
-                                </label>
-                            </div>
+                                <%-- Collapsible NestedReply --%>
+                            <div id="collapse-${rootStatus.count}" class="bg-light p-2 collapse">
+                                <%-- nested replies --%>
+                                <c:forEach var="nestedReply" items="${nestedReplies}" varStatus="status">
+                                    <%--<c:if test="${nestedReply.parentId eq reply.id}">--%>
+                                        <div class="bg-white n-reply">
+                                            <div class="d-flex flex-row user-info">
+                                                <div class="d-flex flex-column justify-content-start ml-2">
+                                                    <span class="d-block font-weight-bold name">${nestedReply.user.userId}</span>
+                                                    <span class="date text-black-50">Shared publicly - <fmt:formatDate value="${nestedReply.createDate}" pattern="MM yyyy"/></span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 mx-2">
+                                                <p class="comment-text">${nestedReply.content}</p>
+                                            </div>
+                                        </div>
+                                    <%--</c:if>--%>
+                                </c:forEach>
 
-                            <div class="mt-2 text-right">
-                                <button class="btn btn-primary btn-sm shadow-none" id="btn-nested-reply-save-${reply.id}"
-                                        type="button" onclick="collapsibleComment.saveNestedReply(${reply.id})">Post comment
-                                </button>
-                                <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel
-                                </button>
+                                    <%--nested reply post--%>
+                                    <%-- principal --%>
+                                <div class="d-flex flex-row user-info">
+                                    <div class="form-inline my-2">
+                                        <label for="nestedReplyId-${reply.id}"></label>
+                                        <input type="text" class="form-control" placeholder="Id" id="nestedReplyId-${reply.id}">
+                                        <label for="nestedReplyPassword-${reply.id}"></label>
+                                        <input type="text" class="form-control ml-2" placeholder="Password" id="nestedReplyPassword-${reply.id}">
+                                    </div>
+                                </div>
+                                    <%-- textarea --%>
+                                <div class="d-flex flex-row align-items-start">
+                                    <label>
+                                        <textarea class="form-control ml-1 shadow-none textarea" id="nestedReplyContent-${reply.id}"></textarea>
+                                    </label>
+                                </div>
+
+                                <div class="mt-2 text-right">
+                                    <button class="btn btn-seondary btn-sm shadow-none" id="btn-nested-reply-save-${reply.id}"
+                                            type="button" onclick="saveNestedReply(${reply.id})">Post comment
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </c:forEach>
 
-        </c:forEach>
     </div>
 </div>
 

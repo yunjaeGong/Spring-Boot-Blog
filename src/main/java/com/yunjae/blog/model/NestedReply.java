@@ -20,8 +20,6 @@ public class NestedReply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int parenId;
-
     @Lob
     @Column(nullable = false)
     private String content;
@@ -34,9 +32,16 @@ public class NestedReply {
     @JoinColumn(name = "userId")
     private User user;
 
+    @Column(nullable = true)
+    private int parentId;
+
+    @Column(nullable = true)
+    private int rootId;
+
+    @Column(nullable = true)
     private int depth;
 
-    private int replyOrder;
+    // private int replyOrder; depth 등 존재하면
 
     @CreationTimestamp
     private Timestamp createDate;

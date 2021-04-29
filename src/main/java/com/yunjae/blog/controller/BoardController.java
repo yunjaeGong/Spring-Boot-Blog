@@ -2,6 +2,7 @@ package com.yunjae.blog.controller;
 
 import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.service.BoardService;
+import com.yunjae.blog.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,10 +21,13 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private ReplyService replyService;
+
     @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 8, sort = "createDate", direction = Sort.Direction.ASC)Pageable pageable) {
         model.addAttribute("boards", boardService.getPosts(pageable));
-        model.addAttribute("rootReplies", boardService.getPosts(pageable));
+        // model.addAttribute("rootReplies", boardService.getPosts(pageable));
         Map<String, Integer> configs = Map.of("maxPages",8); // TODO: json으로 전달 가능?
         model.addAllAttributes(configs);
         // 컨트롤러에서 세션 정보를 어떻게 찾는지?
@@ -31,9 +35,11 @@ public class BoardController {
         return "index"; // viewResolver 작동 /WEB-INF/views/index.jsp
     }
 
-    @GetMapping("/board/{id}")
-    public String findById(@PathVariable int id, Model model) {
-        model.addAttribute("board", boardService.getPost(id));
+    @GetMapping("/board/{boardId}")
+    public String findById(@PathVariable int boardId, Model model) {
+        model.addAttribute("board", boardService.getPost(boardId));
+        model.addAttribute("rootReplies", replyService.getRootReplies(boardId));
+        model.addAttribute("nestedReplies", replyService.getNestedReplies(boardId));
         return "board/detail";
     }
 

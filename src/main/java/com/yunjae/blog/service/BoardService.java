@@ -1,11 +1,9 @@
 package com.yunjae.blog.service;
 
 import com.yunjae.blog.dto.ReplySaveRequestDto;
-import com.yunjae.blog.model.Board;
-import com.yunjae.blog.model.Reply;
-import com.yunjae.blog.model.User;
-import com.yunjae.blog.model.UserRoleType;
+import com.yunjae.blog.model.*;
 import com.yunjae.blog.repository.BoardRepository;
+import com.yunjae.blog.repository.NestedReplyRepository;
 import com.yunjae.blog.repository.ReplyRepository;
 import com.yunjae.blog.repository.UserRepository;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
@@ -28,8 +26,11 @@ public class BoardService {
     @Autowired
     private UserRepository userRepository;
 
+    /*@Autowired
+    private ReplyRepository replyRepository;*/
+
     @Autowired
-    private ReplyRepository replyRepository;
+    private NestedReplyRepository replyRepository;
 
     @Transactional
     public void savePost(Board board, User user) { // 글쓰기 서비스
@@ -76,14 +77,17 @@ public class BoardService {
         Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
         });
-
-        /*Reply reply = Reply.builder()
+        System.out.println(replySaveRequestDto.toString());
+        NestedReply reply = NestedReply.builder()
                 .user(user)
                 .board(board)
                 .content(replySaveRequestDto.getContent())
-                .build();*/
-        replyRepository.sqlSave(user.getId(), board.getId(), replySaveRequestDto.getContent());
-        // replyRepository.save(reply);
+                .parentId(replySaveRequestDto.getParentId())
+                .depth(1)
+                .rootId(replySaveRequestDto.getRootId())
+                .build();
+        // replyRepository.sqlSave(user.getId(), board.getId(), replySaveRequestDto.getContent(), );
+        replyRepository.save(reply);
     }
 
     @Transactional
