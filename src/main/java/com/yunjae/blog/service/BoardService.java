@@ -69,7 +69,7 @@ public class BoardService {
 
     @Transactional
     public void saveReply(ReplySaveRequestDto replySaveRequestDto) {
-        System.out.println("saveReply " + replySaveRequestDto.getUserId());
+        System.out.println("saveReply Service " + replySaveRequestDto.getUserId());
         User user = userRepository.findByUsername(replySaveRequestDto.getUserId()).orElseThrow(() -> {
             return new IllegalIdentifierException("댓글 쓰기 실패: 유저 아이디를 찾을 수 없습니다.");
         });
@@ -83,7 +83,7 @@ public class BoardService {
                 .board(board)
                 .content(replySaveRequestDto.getContent())
                 .parentId(replySaveRequestDto.getParentId())
-                .depth(1)
+                .depth(replySaveRequestDto.getDepth())
                 .rootId(replySaveRequestDto.getRootId())
                 .build();
         // replyRepository.sqlSave(user.getId(), board.getId(), replySaveRequestDto.getContent(), );

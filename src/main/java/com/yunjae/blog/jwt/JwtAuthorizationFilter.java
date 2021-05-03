@@ -2,6 +2,7 @@ package com.yunjae.blog.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.impl.JWTParser;
 import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.model.User;
 import com.yunjae.blog.repository.UserRepository;
@@ -34,11 +35,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("인증이나 권한이 필요한 주소 요청됨");
+        System.out.println("JwtAuthorizationFilter: 인증이나 권한이 필요한 주소 요청됨");
 
         String jwtHeader = request.getHeader(JwtProperties.HEADER_STRING);
 
         if (jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
+            System.out.println("JwtAuthorizationFilter: Authorization error, missing Jwt Header");
             chain.doFilter(request, response);
             return;
         }
@@ -46,11 +48,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String jwtToken = jwtHeader.replace("Bearer ", "");
 
         String username =
-                JWT.require(Algorithm.HMAC512("test")).build().verify(jwtToken).getClaim("username").asString();
+                JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("username").asString();
 
         if (username != null) {
             User userEntity = userRepository.findByUsername(username).orElseThrow(()-> {
                 try {
+                    System.out.println("존재하지 않는 사용자입니다");
                     chain.doFilter(request, response);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -66,7 +69,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         }
-        chain.doFilter(request, response);
         return;
     }
+
+
 }

@@ -38,7 +38,6 @@ public class UserApiController {
     @PostMapping("/auth/join")
     public ResponseDto<Integer> join(@RequestBody User user) {
         // System.out.println("UserApiController: join 호출됨.");
-
         userService.join(user); // 회원가입 (Transaction)
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }

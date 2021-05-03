@@ -9,6 +9,7 @@ import com.yunjae.blog.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,10 @@ public class BoardApiController {
     @PostMapping("/api/board/{boardId}/reply")
     // public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
     public ResponseDto<Integer> saveReply(@RequestBody ReplySaveRequestDto replySaveRequestDto, @AuthenticationPrincipal PrincipalDetail principal) {
+
         boardService.saveReply(replySaveRequestDto);
         // sqlSave(requestBoard) - native query
+        System.out.println("saveReply: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 

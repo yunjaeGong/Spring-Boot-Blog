@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -25,9 +26,9 @@ import java.util.Date;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String loginProcessingUrl) {
         this.authenticationManager = authenticationManager;
-        this.setFilterProcessesUrl("/api/login");
+        this.setFilterProcessesUrl(loginProcessingUrl);
         // /api/~ 통한 로그인 처리 위해 setFilterProcessesUrl(String filterProcessesUrl)
     }
 
@@ -51,8 +52,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // PrincipalDetailsService의 loadUserByUsername가 실행된 후 정상이 authentication이 반환됨
             Authentication authentication = authenticationManager.authenticate(token);
 
-            // 3. PrincipalDetails를 세션에 담고(authentication overriding) -> 권한 관리 위해
-            // authentication 객체는 session 영역에 저장됨 => 로그인 완료
+            // 3. PrincipalDetails를 세션에 담고(authentication overriding)
+            PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
+            System.out.println("JwtAuthenticationFilter: " + principalDetail.getUser().getUsername()); // 로그인 정상적으로 가
+
+            // authentication 객체를 반환하면 session 영역에 저장 => 로그인 완료
+            //  -> 권한 관리를 security에 위임했기 때문
             return authentication;
 
         } catch (IOException e) {
@@ -66,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // attemptAuthentication에서 로그인 시도 후 성공하면 successfulAuthentication 실행됨
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        System.out.println("login success!" + authResult.getPrincipal().toString());
+        System.out.println("successfulAuthentication " + authResult.getPrincipal().toString());
         // 4. JWT 토근을 담아 응답
         PrincipalDetail principalDetails = (PrincipalDetail)authResult.getPrincipal();
 

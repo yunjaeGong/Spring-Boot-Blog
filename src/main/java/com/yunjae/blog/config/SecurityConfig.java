@@ -1,8 +1,14 @@
 package com.yunjae.blog.config;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.config.auth.PrincipalDetailService;
+import com.yunjae.blog.handler.FormLoginSuccessHandler;
 import com.yunjae.blog.jwt.JwtAuthenticationFilter;
 import com.yunjae.blog.jwt.JwtAuthorizationFilter;
+import com.yunjae.blog.jwt.JwtFormLoginFilter;
+import com.yunjae.blog.jwt.JwtProperties;
 import com.yunjae.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +16,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.filter.CorsFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
 
 @Configuration // 빈 등록
 @EnableWebSecurity // Security 필터로 등록
@@ -42,6 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler formLoginSuccessHandler(){
+        return new FormLoginSuccessHandler();
+    }
+
     // Spring Security가 로그인 정보를 가로채며 로그인 요청을 할 때
     // password가 어떤 방법으로 hash가 되어 있는지 알아야 같은 방법으로 hashing 해 DB 값과 비교 가능
     @Override
@@ -61,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin().disable()
                     .httpBasic().disable()
                     .addFilter(corsFilter) // @CrossOrigin(인증 필요x 경우), 시큐리티 필터에 등록(인증O)
-                    .addFilter(new JwtAuthenticationFilter(authenticationManagerBean()))
+                    .addFilter(new JwtAuthenticationFilter(authenticationManagerBean(), "/api/login"))
                     .addFilter(new JwtAuthorizationFilter(authenticationManagerBean(), userRepository))
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -89,8 +110,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/auth/loginForm")
                     .loginProcessingUrl("/auth/login") // spring security가 해당 주소로 오는 요청을 가로채 대신 로그인 요청 -> PrincipalDetailService
+                    .successHandler(formLoginSuccessHandler())
                     .defaultSuccessUrl("/"); // 정상적으로 처리되면 main 페이지로 (세션 정보 존재)
         }
+        /*private void loginSuccessHandler(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+            System.out.println("loginSuccessHandler: form로그인 시도");
+
+            PrincipalDetail principal = (PrincipalDetail) authentication.getPrincipal();
+
+            String jwtToken = JWT.create()
+                    .withSubject("testToken")
+                    .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                    .withClaim("id", principal.getUser().getId())
+                    .withClaim("username", principal.getUser().getUsername())
+                    .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+
+            response.addHeader(JwtProperties.HEADER_STRING, jwtToken);
+        }*/
     }
 
 }
