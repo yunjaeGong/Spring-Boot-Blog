@@ -5,31 +5,46 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.model.User;
+import com.yunjae.blog.service.CookieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
+import static org.springframework.web.util.WebUtils.getCookie;
+
 // Spring Security에 UsernamePasswordAuthenticationFilter존재
 // @Order(2)에서 /login 요청 시 username, password 전송하면 UsernamePasswordAuthenticationFilter가 자동으로 동작
 // @Order(1) entry point에서는 이 필터가 동작(formLogin 허용 x)
+@Component
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final AuthenticationManager authenticationManager;
+    @Override
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        super.setAuthenticationManager(authenticationManager);
+    }
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String loginProcessingUrl) {
+    private AuthenticationManager authenticationManager;
+    private CookieService cookieService;
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, CookieService cookieService) {
+        this.setFilterProcessesUrl("/api/login");
         this.authenticationManager = authenticationManager;
-        this.setFilterProcessesUrl(loginProcessingUrl);
-        // /api/~ 통한 로그인 처리 위해 setFilterProcessesUrl(String filterProcessesUrl)
+        this.cookieService = cookieService;
     }
 
     // /api/** 에 대해 이 필터가 동작하게 하기 위해서는 이 필터를 직접 등록 필요
@@ -43,6 +58,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 2. 정상인지 로그인 시. authenticationManager로 로그인을 시도하면
         // PrincipalDetailsService 호출, loadUserByUsername() 호출됨
         try {
+
             User user = om.readValue(request.getInputStream(), User.class);
 
             // authentication token 생성
@@ -73,7 +89,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("successfulAuthentication " + authResult.getPrincipal().toString());
         // 4. JWT 토근을 담아 응답
-        PrincipalDetail principalDetails = (PrincipalDetail)authResult.getPrincipal();
+        PrincipalDetail principalDetails = (PrincipalDetail) authResult.getPrincipal();
 
         String jwtToken = JWT.create()
                 .withSubject("testToken")
@@ -82,6 +98,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withClaim("username", principalDetails.getUser().getUsername())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
+        Cookie accessToken = cookieService.createCookie(JwtProperties.HEADER_STRING, jwtToken);
+
         response.addHeader(JwtProperties.HEADER_STRING, jwtToken);
+        response.addCookie(accessToken);
     }
+
+
+
 }

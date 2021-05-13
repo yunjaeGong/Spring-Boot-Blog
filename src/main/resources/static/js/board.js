@@ -78,30 +78,34 @@ let index = {
             rootId: 0,
         };
 
-        // console.log(data);
-
         $.ajax({
             type: "POST",
             url: `/api/login`,
             data: JSON.stringify({username: data.userId, password: data.password}),
             contentType: "application/json; charset=utf-8",
-            data_type: "json"
+            data_type: "json",
+            success: function(respData, status, xhr) {
+                window.token = xhr.getResponseHeader("Authentication");
+                console.log(window.token);
+            }
             // 입력한 로그인 정보로 ajax 로그인 요청
-        }).done(function (resp) {
+        }).done(function() {
+            console.log("댓글 쓰기 요청됨")
             $.ajax({
                 type: "POST",
                 url: `/api/board/${data.boardId}/reply`,
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
-                data_type: "json"
+                data_type: "json",
+                headers: {"Authentication": 'Bearer ' + window.token},
             }).done(function (resp) {
                 alert("댓글 쓰기가 완료되었습니다.");
                 location.href = `/board/${data.boardId}`;
             }).fail(function (error) {
-                alert(JSON.stringify(error));
+                console.log(JSON.stringify(error));
             });
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            console.log(JSON.stringify(error));
         });
     },
     saveNestedReply: function (rootId) {
@@ -153,6 +157,7 @@ let index = {
             alert(JSON.stringify(error));
         });
     },
+
 };
 
 index.init();

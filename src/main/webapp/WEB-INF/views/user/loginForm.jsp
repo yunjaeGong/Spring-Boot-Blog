@@ -25,5 +25,4 @@
     </form>
 
 </div>
-<script src="/js/user.js"></script>
 <%@ include file="../layout/footer.jsp" %>

@@ -5,7 +5,9 @@ import com.yunjae.blog.dto.ReplySaveRequestDto;
 import com.yunjae.blog.dto.ResponseDto;
 import com.yunjae.blog.model.Board;
 import com.yunjae.blog.model.Reply;
+import com.yunjae.blog.repository.NestedReplyRepository;
 import com.yunjae.blog.service.BoardService;
+import com.yunjae.blog.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +20,9 @@ public class BoardApiController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private ReplyService replyService;
 
     @PostMapping("/api/board/save")
     public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) {
@@ -36,9 +41,9 @@ public class BoardApiController {
     // public ResponseDto<Integer> save(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
     public ResponseDto<Integer> saveReply(@RequestBody ReplySaveRequestDto replySaveRequestDto, @AuthenticationPrincipal PrincipalDetail principal) {
 
-        boardService.saveReply(replySaveRequestDto);
+        replyService.saveReply(replySaveRequestDto);
         // sqlSave(requestBoard) - native query
-        System.out.println("saveReply: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        System.out.println("BoardApiController: saveReply - SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
@@ -50,7 +55,7 @@ public class BoardApiController {
     }
 
     @DeleteMapping("/api/board/{boardId}/reply/{replyId}")
-    public ResponseDto<Integer> deleteReply(@PathVariable int replyId) {
+    public ResponseDto<Integer> deleteReply(@PathVariable int boardId, @PathVariable int replyId) {
         boardService.deleteReply(replyId);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
