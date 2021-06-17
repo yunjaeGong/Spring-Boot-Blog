@@ -3,6 +3,7 @@ package com.yunjae.blog.service;
 import com.yunjae.blog.model.User;
 import com.yunjae.blog.model.UserRoleType;
 import com.yunjae.blog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,14 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+@RequiredArgsConstructor
 @Service // Component Scan을 통해 IoC Container에 등록
 public class UserService { // 서비스: 하나 이상의 crud (송금)
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
 
     @Transactional
@@ -36,10 +36,9 @@ public class UserService { // 서비스: 하나 이상의 crud (송금)
     public void update(User updatedUser) {
         // 수정시에는 Persistent Context User 오브젝트를 영속화 시킨 후 영속화된 User 오브젝트를 수정
         // 영속화된 오브젝트를 변경하면 자동으로 DB에 update 실행
-        System.out.println(updatedUser.getEmail());
-        System.out.println(updatedUser.getId());
+
         User persistent = userRepository.findById(updatedUser.getId()).orElseThrow(() -> {
-            return new IllegalArgumentException("User Service: update, 회원 정보를 찾을 수 없습니다.");
+            throw new IllegalArgumentException("User Service: update, 회원 정보를 찾을 수 없습니다.");
         });
         String encPassword = encoder.encode(updatedUser.getPassword());
         persistent.setPassword(encPassword);

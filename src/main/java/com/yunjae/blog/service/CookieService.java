@@ -18,7 +18,7 @@ public class CookieService {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(JwtProperties.EXPIRATION_TIME/1000);
         cookie.setComment("JWT Authorization & Authentication");
-
+        cookie.setPath("/");
         return cookie;
     }
 

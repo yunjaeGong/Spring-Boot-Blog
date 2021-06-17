@@ -3,7 +3,7 @@
 <%@ include file="../layout/header.jsp" %>
 
 <div class="container">
-    <form action="/auth/login" method="post">
+    <form id="loginForm" action="/auth/login" method="post">
         <%-- spring security가 요청 가로챔 --%>
         <div class="form-group">
             <label for="username">Username:</label>

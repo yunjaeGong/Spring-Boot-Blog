@@ -47,7 +47,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Board getPost(int id) {
         return boardRepository.findById(id).orElseThrow(()->{
-            return new IllegalArgumentException("글 찾기 실패: 아이디를 찾을 수 없습니다."); // TODO
+            return new IllegalArgumentException("글 찾기 실패: 아이디를 찾을 수 없습니다.");
         });
         // Board에는 List<Reply> 존재
     }
@@ -65,11 +65,6 @@ public class BoardService {
     @Transactional
     public void deletePost(int id) {
         boardRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void deleteReply(int id) {
-        replyRepository.deleteById(id);
     }
 
 }

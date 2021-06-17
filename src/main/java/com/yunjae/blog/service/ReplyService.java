@@ -1,5 +1,6 @@
 package com.yunjae.blog.service;
 
+import com.yunjae.blog.dto.ReplyDto;
 import com.yunjae.blog.dto.ReplySaveRequestDto;
 import com.yunjae.blog.model.Board;
 import com.yunjae.blog.model.NestedReply;
@@ -7,24 +8,27 @@ import com.yunjae.blog.model.User;
 import com.yunjae.blog.repository.BoardRepository;
 import com.yunjae.blog.repository.NestedReplyRepository;
 import com.yunjae.blog.repository.UserRepository;
+import com.yunjae.blog.util.TimeAgo;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class ReplyService {
-    @Autowired
-    NestedReplyRepository replyRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final NestedReplyRepository replyRepository;
 
-    @Autowired
-    BoardRepository boardRepository;
+    private final UserRepository userRepository;
+
+    private final BoardRepository boardRepository;
+
+    private final TimeAgo timeAgoUtil;
 
     @Transactional(readOnly = true)
     public List<NestedReply> getRootReplies(int boardId) {
@@ -62,4 +66,31 @@ public class ReplyService {
     public void deleteReply(int id) {
         replyRepository.deleteById(id);
     }
+
+    @Transactional
+    public void updateReply(int id, String content) {
+        NestedReply reply = replyRepository.getOne(id);
+        reply.setContent(content);
+        replyRepository.save(reply);
+    }
+
+    public List<ReplyDto> getTimeAgoReplies(List<NestedReply> replies) {
+        List<ReplyDto> timeAgoReplies = new ArrayList<>();
+        ReplyDto dto;
+        if(replies == null) {
+            System.out.println("Nested reply is null");
+            return null;
+        }
+        for (NestedReply reply : replies) {
+
+            long lastUpdated = reply.getUpdateDate()!=null?reply.getUpdateDate().getTime():reply.getCreateDate().getTime();
+            String timeAgo = timeAgoUtil.toRelative(lastUpdated);
+            dto = new ReplyDto(reply, timeAgo);
+
+            dto.setTimeAgo(timeAgo);
+            timeAgoReplies.add(dto);
+        }
+        return timeAgoReplies;
+    }
+
 }

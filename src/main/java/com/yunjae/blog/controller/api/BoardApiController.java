@@ -4,6 +4,7 @@ import com.yunjae.blog.config.auth.PrincipalDetail;
 import com.yunjae.blog.dto.ReplySaveRequestDto;
 import com.yunjae.blog.dto.ResponseDto;
 import com.yunjae.blog.model.Board;
+import com.yunjae.blog.model.NestedReply;
 import com.yunjae.blog.model.Reply;
 import com.yunjae.blog.repository.NestedReplyRepository;
 import com.yunjae.blog.service.BoardService;
@@ -43,7 +44,7 @@ public class BoardApiController {
 
         replyService.saveReply(replySaveRequestDto);
         // sqlSave(requestBoard) - native query
-        System.out.println("BoardApiController: saveReply - SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        // System.out.println("BoardApiController: saveReply - SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1); // Java Object를 Json으로 변환해 반환
     }
 
@@ -54,9 +55,16 @@ public class BoardApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
-    @DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+    @DeleteMapping("/api/board/{boardId}/{replyId}")
     public ResponseDto<Integer> deleteReply(@PathVariable int boardId, @PathVariable int replyId) {
-        boardService.deleteReply(replyId);
+        replyService.deleteReply(replyId);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+    }
+
+    @PutMapping("/api/board/{boardId}/{replyId}")
+    public ResponseDto<Integer> updateReply(@PathVariable int boardId, @PathVariable int replyId, @RequestBody NestedReply reply) {
+        System.out.println("updateReply: " + reply.getContent());
+        replyService.updateReply(replyId, reply.getContent());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 

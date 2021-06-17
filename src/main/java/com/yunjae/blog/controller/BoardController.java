@@ -1,11 +1,15 @@
 package com.yunjae.blog.controller;
 
 import com.yunjae.blog.config.auth.PrincipalDetail;
+import com.yunjae.blog.dto.ReplyDto;
+import com.yunjae.blog.model.NestedReply;
 import com.yunjae.blog.model.User;
 import com.yunjae.blog.repository.UserRepository;
 import com.yunjae.blog.service.BoardService;
 import com.yunjae.blog.service.ReplyService;
 import com.yunjae.blog.service.UserService;
+import com.yunjae.blog.util.TimeAgo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,19 +23,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+    private final BoardService boardService;
 
-    @Autowired
-    private ReplyService replyService;
+    private final ReplyService replyService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final TimeAgo timeAgo;
 
     @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 8, sort = "createDate", direction = Sort.Direction.ASC)Pageable pageable) {
@@ -47,10 +53,16 @@ public class BoardController {
     @GetMapping("/board/{boardId}")
     public String findById(@PathVariable int boardId, Model model) {
         model.addAttribute("board", boardService.getPost(boardId));
-        model.addAttribute("rootReplies", replyService.getRootReplies(boardId));
-        model.addAttribute("nestedReplies", replyService.getNestedReplies(boardId));
 
-        System.out.println("BoardController: findById - SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication().getName());
+        List<ReplyDto> rootReplies, nestedReplies;
+
+        rootReplies = replyService.getTimeAgoReplies(replyService.getRootReplies(boardId));
+        nestedReplies = replyService.getTimeAgoReplies(replyService.getNestedReplies(boardId));
+
+        model.addAttribute("rootReplies", rootReplies);
+        model.addAttribute("nestedReplies", nestedReplies);
+
+        // System.out.println("BoardController: findById - SecurityContextHolder: " + SecurityContextHolder.getContext().getAuthentication().getName());
 
         return "board/detail";
     }

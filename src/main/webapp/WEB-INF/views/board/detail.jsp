@@ -123,7 +123,7 @@
         bottom: 50%;
         z-index: 1;
     }
-    .n-reply {
+    .n-reply{
         padding: 8px;
         margin-left: 24px;
         margin-bottom: 8px;
@@ -133,13 +133,7 @@
 
 <div class="container">
     <div>
-        글번호: <span id="id"><i>${board.id}</i></span>
-        작성자: <span><i>${board.user.username}</i></span>
-    </div>
-    <br/>
-
-    <div>
-        <h3>${board.title}</h3>
+        <h1>${board.title}</h1>
     </div>
     <br/>
 
@@ -162,7 +156,7 @@
 
     <%-- 댓글 작성 --%>
 
-    <div>
+    <div class="col-7">
         <%-- https://github.com/ZsharE/threaded-comments-bootstrap --%>
         <%-- TODO: MIT License 표기 --%>
         <%-- replies --%>
@@ -174,66 +168,132 @@
                     <div class="reply-wrapper">
                         <div class="card">
                             <div class="card-header">
-                                <a href="#" class="username">${reply.user.username}</a>
+                                    <a href="#" class="username">${reply.user.username}</a>
 
                                 <span class="reply-date"><fmt:formatDate type="both" dateStyle="medium" timeStyle="medium"  value="${reply.createDate}" /></span>
                             </div>
-                            <div class="card-body">
-                                <p class="card-text">${reply.content}</p>
+                            <div id="replyCardBody-${reply.id}" class="card-body">
+                                <textarea id="replyTextareaId-${reply.id}" rows="3" name="text" class="form-control"
+                                          style="resize:vertical; display:none"></textarea>
+                                <span class="card-text"
+                                      id="replyContentId-${reply.id}">${reply.content}</span>
                             </div>
                             <div class="card-footer bg-white p-2">
-                                    <%--<button id="btn-nested-reply" type="button" class="btn btn-secondary btn-sm">Reply</button>--%>
+                                <%--<button id="btn-nested-reply" type="button" class="btn btn-secondary btn-sm">Reply</button>--%>
                                 <div class="like cursor action-collapse">
                                     <button class="btn btn-secondary btn-sm" data-toggle="collapse" aria-expanded="true" aria-controls="collapse-${rootStatus.count}" href="#collapse-${rootStatus.count}">Reply</button>
-                                    <small class="text-muted ml-2" style="vertical-align: middle">Last updated 3 mins ago</small > <%--TODO: 업데이트된 시간{x mins ago, x days 7], x week, a year, ""}--%>
+                                    <small class="text-muted ml-2" style="vertical-align: middle">${reply.timeAgo}</small >
                                     <span class="float-right">
                                     <c:choose>
                                         <c:when test="${board.user.id == principal.user.id}">
-                                            <button onclick="index.replyDelete(${board.id},${reply.id}" class="btn btn-danger btn-sm">삭제</button>
-                                            <button onclick="index.replyDelete(${board.id},${reply.id}" class="btn btn-warning btn-sm">수정</button>
+                                            <button onclick="index.replyDelete(${board.id},${reply.id})" class="btn btn-danger btn-sm">삭제</button>
+                                            <button id="replyModify-${reply.id}"  onclick="index.modifyReplyTextareaToggle(${reply.id}, 'reply')"
+                                                    style="display: inline-block" class="btn btn-warning btn-sm">수정</button>
+
+                                            <span style="display: none" id="replyOnModify-${reply.id}">
+                                            <button onclick="index.updateReply(${board.id}, ${reply.id}, 'reply')"
+                                                class="btn btn-secondary btn-sm">Register</button>
+                                            <button class="btn btn-outline-primary btn-sm shadow-none"
+                                                onclick="index.modifyReplyTextareaToggle(${reply.id}, 'reply')">Cancel</button>
+                                            </span>
                                         </c:when>
                                     </c:choose>
-                                </span>
+                                    </span>
                                 </div>
-
-
-
-                                    <%-- Collapsible --%>
+                                <%-- Collapsible --%>
                                 <div id="collapse-${rootStatus.count}" class="bg-light p-2 collapse">
-                                        <%-- nested replies --%>
-                                    <c:forEach var="nestedReply" items="${nestedReplies}" varStatus="status">
-                                        <c:if test="${nestedReply.parentId eq reply.id}">
-                                            <div class="bg-white n-reply">
-                                                <div class="d-flex flex-row user-info">
-                                                    <span class="fs-16">${nestedReply.user.username}</span>
-                                                        <%--<div class="d-flex flex-column justify-content-start ml-2"><span class="d-block font-weight-bold name">Marry Andrews</span><span class="date text-black-50">Shared publicly - Jan 2020</span></div>--%>
-                                                </div>
-                                                <div class="mt-2 mx-2">
-                                                    <p class="comment-text">${nestedReply.content}</p>
-                                                </div>
+                                    <%-- Nested replies --%>
+                                    <ul class="replies">
+                                        <c:forEach var="nestedReply" items="${nestedReplies}"
+                                                   varStatus="status">
+                                            <c:if test="${nestedReply.parentId eq reply.id}">
+                                                <li class="reply">
+                                                    <div class="reply-wrapper">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <a href="#"
+                                                                   class="username">${nestedReply.user.username}</a>
+                                                                    <%--<div class="d-flex flex-column justify-content-start ml-2"><span class="d-block font-weight-bold name">Marry Andrews</span><span class="date text-black-50">Shared publicly - Jan 2020</span></div>--%>
+                                                            </div>
+
+                                                            <div id="nestedReplyCardBody-${nestedReply.id}" class="card-body">
+                                                                <textarea id="nestedReplyTextareaId-${nestedReply.id}" rows="3" name="text" class="form-control"
+                                                                          style="resize:vertical; display:none"></textarea>
+                                                                <span class="card-text"
+                                                                   id="nestedReplyContentId-${nestedReply.id}">${nestedReply.content}</span>
+                                                            </div>
+                                                            <div class="card-footer bg-white p-2">
+                                                                <small class="text-muted ml-2" style="vertical-align: middle">${nestedReply.timeAgo}</small >
+                                                                <span class="float-right" id="nestedReplyFooterId-${nestedReply.id}">
+                                                                    <c:choose>
+                                                                        <c:when test="${board.user.id == principal.user.id}">
+                                                                            <button onclick="index.replyDelete(${board.id},${nestedReply.id})"
+                                                                                    class="btn btn-danger btn-sm">삭제</button>
+                                                                            <button style="display: inline-block" id="nestedReplyModify-${nestedReply.id}"
+                                                                                    onclick="index.modifyReplyTextareaToggle(${nestedReply.id}, 'nestedReply')"
+                                                                                    class="btn btn-warning btn-sm">수정</button>
+
+                                                                            <span style="display: none" id="nestedReplyOnModify-${nestedReply.id}">
+                                                                                <button onclick="index.updateReply(${board.id}, ${nestedReply.id}, 'nestedReply')"
+                                                                                        class="btn btn-secondary btn-sm">Register</button>
+                                                                                <button class="btn btn-outline-primary btn-sm shadow-none"
+                                                                                        onclick="index.modifyReplyTextareaToggle(${nestedReply.id}, 'nestedReply')">Cancel</button>
+                                                                            </span>
+
+                                                                        </c:when>
+                                                                    </c:choose>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
+                                    </ul>
+
+                                    <%-- Post NestedReply --%>
+                                    <%-- Principal --%>
+                                    <div class="reply-wrapper">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <c:choose>
+                                                    <c:when test="${empty principal}">
+                                                        <div class="d-flex form-inline">
+                                                            <label for="nestedReplyUsername-${reply.id}"></label>
+                                                            <input type="text" class="form-control ml-2"
+                                                                   placeholder="id"
+                                                                   id="nestedReplyUsername-${reply.id}">
+                                                            <label for="nestedReplyPassword-${reply.id}"></label>
+                                                            <input type="text" class="form-control ml-2"
+                                                                   placeholder="password"
+                                                                   id="nestedReplyPassword-${reply.id}">
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="#"
+                                                           class="username">${principal.user.username}</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
-                                        </c:if>
-                                    </c:forEach>
 
-                                        <%--nested reply post--%>
-                                        <%--principal--%>
-                                    <div class="d-flex flex-row user-info">
-                                        <div class="form-inline my-2">
-                                            <label for="nestedReplyId-${reply.id}"></label>
-                                            <input type="text" class="form-control ml-2" placeholder="id" id="nestedReplyId-${reply.id}">
-                                            <label for="nestedReplyPassword-${reply.id}"></label>
-                                            <input type="text" class="form-control ml-2" placeholder="password" id="nestedReplyPassword-${reply.id}">
+                                            <div class="p-2">
+                                                <label for="nestedReplyContent-${reply.id}"></label>
+                                                <textarea class="form-control px-2"
+                                                          id="nestedReplyContent-${reply.id}"
+                                                          rows="3"></textarea>
+                                            </div>
+                                            <div class="card-footer bg-white p-2">
+                                                <button class="btn btn-secondary btn-sm shadow-none"
+                                                        id="btn-nested-reply-save-${reply.id}"
+                                                        onclick="index.saveNestedReply(${reply.id})">Post
+                                                    comment
+                                                </button>
+                                                <button class="btn btn-outline-primary btn-sm ml-1 shadow-none"
+                                                        type="button" data-toggle="collapse" aria-controls="collapse-${rootStatus.count}" data-target="#collapse-${rootStatus.count}">Cancel
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row align-items-start">
-                                        <textarea class="form-control ml-2 shadow-none textarea form-control" rows="3" id="nestedReplyContent-${reply.id}"></textarea>
-                                    </div>
-
-                                    <div class="mt-2 text-right">
-                                        <button class="btn btn-secondary btn-sm shadow-none" id="btn-nested-reply-save-${reply.id}"
-                                                onclick="index.saveNestedReply(${reply.id})">Post comment</button>
-                                        <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel</button>
                                     </div>
                                 </div>
                                     <%-- End of Collapsible --%>
@@ -243,38 +303,41 @@
                 </li>
             </c:forEach>
         </ul>
-        <div class="card mb-2">
 
-            <input type="hidden" id="boardId" value="${board.id}"/>
-            <input type="hidden" id="principalId" value="${principal.user.id}"/>
+        <%-- Reply textarea --%>
+            <div class="reply-wrapper">
+                <div class="card">
 
-            <div class="card-header d-flex align-items-center">
-                <p class="d-flex align-items-center"><h5
-                    style="color: dimgray;font-size: 16px;line-height: 1;margin: 0 10px;">Reply</h5></p>
-            </div>
-            <c:choose>
-                <c:when test="${empty principal}">
-                    <div class="form-inline my-2">
-                        <label for="userId"></label>
-                        <input type="text" class="form-control ml-2" placeholder="id" id="userId">
-                        <label for="replyPassword"></label>
-                        <input type="text" class="form-control ml-2" placeholder="password" id="replyPassword">
+                    <input type="hidden" id="boardId" value="${board.id}"/>
+                    <input type="hidden" id="principalId" value="${principal.user.id}"/>
+
+                    <div class="card-header"
+                         style="position: relative;padding-top: 8px;padding-bottom: 8px;margin-bottom: 0;line-height: 20px;vertical-align: bottom;">
+                        <c:choose>
+                            <c:when test="${empty principal}">
+                                <div class="form-inline">
+                                    <label for="userId"></label>
+                                    <input type="text" class="form-control ml-2" placeholder="id" id="userId">
+                                    <label for="replyPassword"></label>
+                                    <input type="text" class="form-control ml-2" placeholder="password"
+                                           id="replyPassword">
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="#" class="username">${principal.user.username}</a>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="mx-2">
-                        <a href="#"><h5>${principal.user.username}</h5></a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
 
-            <div class="p-2"><textarea class="form-control px-2" id="replyContent" rows="3"></textarea></div>
-            <div class="card-footer bg-white p-2">
-                <button id="btn-reply" type="button" class="btn btn-secondary btn-sm" onclick="index.saveReply()">
-                    Register
-                </button>
+                    <div class="p-2">
+                        <textarea class="form-control px-2" id="replyContent" rows="3"></textarea>
+                    </div>
+                    <div class="card-footer bg-white p-2">
+                        <button id="btn-reply" type="button" class="btn btn-secondary btn-sm"
+                                onclick="index.saveReply()">Register</button>
+                    </div>
+                </div>
             </div>
-        </div>
     </div>
 </div>
 

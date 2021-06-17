@@ -66,22 +66,30 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }*/
 
-        if (jwtCookie == null) {
+        /*if (jwtCookie == null) {
             System.out.println("JwtAuthorizationFilter: Authorization error, missing Jwt Cookie");
             chain.doFilter(request, response);
             return;
-        }
+        }*/
 
         String username = new String("");
-
+        // System.out.println("cookie: " + jwtCookie.getValue().trim());
         // String jwtToken = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
-        String jwtToken = jwtCookie.getValue().replace("Bearer ", "");
+        // jwtToken = jwtToken.trim().equals("")?jwtCookie.getValue().trim():jwtToken;
+        String jwtToken = jwtCookie.getValue();
+        // System.out.println("token: " + jwtToken);
         if(!jwtToken.trim().equals("")) {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken);
             username = decodedJWT.getClaim("username").asString();
         }
 
-        // username = "asdf";
+        if (jwtToken.trim().equals("")) {
+            System.out.println("JwtAuthorizationFilter: Authorization error, missing Jwt Header");
+            SecurityContextHolder.clearContext();
+            chain.doFilter(request, response);
+            return;
+        }
+
 
         if (!username.trim().equals("")) {
             User user = userRepository.findByUsername(username).orElseThrow(()-> {

@@ -108,20 +108,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf().disable() // TODO: csrf토큰 활성화
                     .httpBasic().disable()
                     .authorizeRequests()
-                    .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/static/**", "/board/**", "/h2-console/**")
-                    .permitAll() // /auth/* 경로는 누구나 접근 가능
-                    .anyRequest()
-                    .authenticated()
+                        .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/static/**", "/board/**", "/h2-console/**")
+                        .permitAll() // /auth/* 경로는 누구나 접근 가능
+                        .anyRequest()
+                        .authenticated()
                     .and() // 인증이 필요한 페이지 접근할 때 loginForm으로 이동
                     .addFilter(corsFilter)
                     .addFilterAt(new JwtFormLoginFilter(authenticationManagerBean(), "/auth/login", userRepository, cookieService), UsernamePasswordAuthenticationFilter.class)
                     .formLogin()
-                    .loginPage("/auth/loginForm")
-                    .loginProcessingUrl("/auth/login") // spring security가 해당 주소로 오는 요청을 가로채 대신 로그인 요청 -> PrincipalDetailService
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .successHandler(new FormLoginSuccessHandler())
-                    .defaultSuccessUrl("/"); // 정상적으로 처리되면 main 페이지로 (세션 정보 존재)
+                        .loginPage("/auth/loginForm")
+                        .loginProcessingUrl("/auth/login") // spring security가 해당 주소로 오는 요청을 가로채 대신 로그인 요청 -> PrincipalDetailService
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/") // 정상적으로 처리되면 main 페이지로 (세션 정보 존재)
+                    .and()
+                    .logout()
+                    .logoutUrl("/logout");
         }
     }
 

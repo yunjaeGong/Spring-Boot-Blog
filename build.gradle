@@ -27,6 +27,8 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.springframework.security:spring-security-taglibs'
 	implementation 'javax.servlet:jstl:1.2' // JSTL
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.4.5'
+
 
 	implementation 'com.auth0:java-jwt:3.15.0'
 

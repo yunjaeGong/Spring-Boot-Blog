@@ -41,11 +41,13 @@ public class JwtFormLoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("formLogin: 로그인 시도");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-         // TODO: board.js에서 login 코드 지우고 authorization 필터 통과 되나 해보기 (여기서 jwt 헤더 발급!)
+        // PrincipalDetail principalDetails = (PrincipalDetail) authResult.getPrincipal();
 
         String jwtToken = JWT.create()
                 .withSubject("testToken")
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                // .withClaim("id", principalDetails.getUser().getId())
+                // .withClaim("username", principalDetails.getUser().getUsername())
                 .withClaim("id", 1)
                 .withClaim("username", username)
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
@@ -53,6 +55,7 @@ public class JwtFormLoginFilter extends UsernamePasswordAuthenticationFilter {
         Cookie accessToken = cookieService.createCookie(JwtProperties.HEADER_STRING, jwtToken);
 
         response.addHeader(JwtProperties.HEADER_STRING, jwtToken);
+        response.addCookie(accessToken);
         return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 }

@@ -1,5 +1,6 @@
 package com.yunjae.blog.model;
 
+import com.yunjae.blog.validation.ValidationProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,23 +20,23 @@ import java.sql.Timestamp;
 @Builder
 // @DynamicInsert insert시 Null인 필드 제외 insert into User (createDate, email, password, username) values (?, ?, ?, ?)
 @Entity // User 클래스가 자동으로 Mysql에 테이블이 생성
-public class User {
+public class User implements ValidationProperties {
 
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB의 넘버링 전략을 따라감(sequence, table, auto 등 존재)
     private int id; // oracle: sequence, mysql: auto_increment
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = USERNAME_LENGTH, unique = true)
     private String username; // 아이디
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = PASSWORD_LENGTH)
     private String password; // hash로 암호화
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = EMAIL_LENGTH)
     private String email;
 
     // DB에는 RoleType이 없다.
-    // @ColumnDefault("'user'")
+    @ColumnDefault("'user'")
     @Enumerated(EnumType.STRING)
     private UserRoleType role; // USER, ADMIN 강제
 
